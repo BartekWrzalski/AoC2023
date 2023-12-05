@@ -10,7 +10,9 @@ seeds = [int(seed) for seed in sections[0].split()[1:]]
 mapping_tables = []
 
 for i in range(1, len(sections)):
-    mapping_tables.append([[int(num) for num in line.split()] for line in sections[i].split("\n")[1:]])
+    mapping_tables.append(
+        [[int(num) for num in line.split()] for line in sections[i].split("\n")[1:]]
+    )
     mapping_tables[i - 1].sort(key=lambda x: x[1], reverse=True)
 
 
@@ -20,11 +22,11 @@ def get_location(seed):
         for _map in map_section:
             if current_val < _map[1]:
                 continue
-            
+
             if current_val <= _map[1] + _map[2] - 1:
                 current_val = _map[0] + current_val - _map[1]
             break
-            
+
     return current_val
 
 
@@ -50,17 +52,24 @@ def two():
 
     jobs = []
     for i, first_seed in enumerate(seeds[::2]):
-        p = Process(target=loop_seed, args=(first_seed, first_seed + seeds[2 * i + 1], locations,))
-        
+        p = Process(
+            target=loop_seed,
+            args=(
+                first_seed,
+                first_seed + seeds[2 * i + 1],
+                locations,
+            ),
+        )
+
         jobs.append(p)
         p.start()
 
     for job in jobs:
         job.join()
-    
+
     print(min(locations))
 
 
 if __name__ == "__main__":
-    # one()
+    one()
     two()
